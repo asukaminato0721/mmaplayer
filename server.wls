@@ -33,7 +33,7 @@ listener = SocketListen[
     origin = Association[ request["Headers"] ]["origin"];
     If[ Head[origin]===Missing, origin="" ];
     result = request["Body"] // ToExpression[#, StandardForm]& //ToBoxes//BoxData//ToString;
-    request["Body"] // ToExpression // WolframPlayer;
+    request["Body"] // ToExpression[#, StandardForm]& // WolframPlayer;
     response = ExportString[
       HTTPResponse[ result, <|
         "StatusCode" -> 200,

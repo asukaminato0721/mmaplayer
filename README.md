@@ -6,11 +6,9 @@ Make sure you have `wolframscript` and `wolframplayer` in your `PATH`.
 
 ---
 
-## Current Problem
+Play it 😆
 
-pop up window only show `Null`
-
-![bug](./bug.png)
+![bug](./show.jpg)
 
 ---
 

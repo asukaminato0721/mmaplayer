@@ -4,7 +4,7 @@ const vscode = require("vscode");
 const path = require("path");
 const http = require("http");
 const { spawn } = require("child_process");
-const port = 5691;
+const port = 5692;
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 /**
