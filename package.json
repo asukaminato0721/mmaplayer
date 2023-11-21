@@ -1,0 +1,56 @@
+{
+  "name": "mmaplayer",
+  "displayName": "mmaplayer",
+  "description": "fmt code",
+  "version": "0.0.2",
+  "repository": {
+    "url": "whatever"
+  },
+  "activationEvents": [
+    "onLanguage:wolfram",
+    "onStartupFinished"
+  ],
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Keymaps"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "wolfram.Player",
+        "title": "Play it"
+      }
+    ],
+    "configuration": {
+      "title": "mmaplayer"
+    },
+    "menus": {
+      "editor/title/run": [
+        {
+          "when": "resourceLangId == wolfram",
+          "command": "wolfram.Player",
+          "alt": "wolfram.Player",
+          "group": "Foo"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "wolfram",
+        "aliases": [
+          "Wolfram Language"
+        ],
+        "extensions": [
+          ".wls",
+          ".wlnb",
+          ".wl",
+          ".nb"
+        ]
+      }
+    ]
+  }
+}
