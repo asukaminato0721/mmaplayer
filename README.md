@@ -8,7 +8,7 @@ Make sure you have `wolframscript` and `wolframplayer` in your `PATH`.
 
 Play it 😆
 
-![bug](./show.jpg)
+see show.jpg for effect.
 
 ---
 
