@@ -49,8 +49,8 @@
           ".wlnb",
           ".wl",
           ".nb",
-          "ipynb",
-          "m"
+          ".ipynb",
+          ".m"
         ]
       }
     ]
