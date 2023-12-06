@@ -19,10 +19,32 @@ If[!DirectoryQ @ #,
         CreateDirectory @ #
     ]& @ $TemporaryOutput;
 
-WolframPlayer[box_] :=
-    {"wolframplayer", Export[FileNameJoin @ {$TemporaryOutput, CreateUUID[
-        "CDFOutput-"] <> ".cdf"}, Notebook[{Cell @ BoxData @ ToBoxes @ box}, 
-        WindowSize -> All], "CDF"], "&"} //
+WolframPlayer[box_, text_String] :=
+    {
+        "wolframplayer"
+        ,
+        Export[
+            FileNameJoin @ {$TemporaryOutput, CreateUUID["CDFOutput-"
+                ] <> ".cdf"}
+            ,
+            Notebook[
+                {
+                    text // Cell
+                    ,
+                    box //
+                    ToBoxes //
+                    BoxData //
+                    Cell
+                }
+                ,
+                WindowSize -> All
+            ]
+            ,
+            "CDF"
+        ]
+        ,
+        "&"
+    } //
     StringRiffle //
     Run
 
@@ -57,7 +79,8 @@ listener =
                     ToBoxes //
                     BoxData //
                     ToString;
-                calResult // WolframPlayer;
+                calResult // WolframPlayer[#, request["Body"] // StringDrop[
+                    #, -2]&]&;
                 response = ExportString[HTTPResponse[result, <|"StatusCode"
                      -> 200, "ContentType" -> "application/json", "Headers" -> {"Access-Control-Allow-Origin"
                      -> origin}|>], "HTTPResponse"];
