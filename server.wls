@@ -12,11 +12,12 @@ Print["Port:       ", port];
 
 Print["$ProcessID: ", $ProcessID];
 
-$TemporaryOutput = FileNameJoin @ {$TemporaryDirectory, "WolframKernelOutput"
-    };
+$TemporaryOutput = {$TemporaryDirectory, "WolframKernelOutput"} // FileNameJoin;
 
-If[!DirectoryQ @ #,
-        CreateDirectory @ #
+If[# //
+    DirectoryQ //
+    Not,
+        # // CreateDirectory
     ]& @ $TemporaryOutput;
 
 WolframPlayer[box_, text_String] :=
@@ -24,12 +25,16 @@ WolframPlayer[box_, text_String] :=
         "wolframplayer"
         ,
         Export[
-            FileNameJoin @ {$TemporaryOutput, CreateUUID["CDFOutput-"
-                ] <> ".cdf"}
+            {$TemporaryOutput, CreateUUID["CDFOutput-"] <> ".cdf"} //
+                 FileNameJoin
             ,
             Notebook[
                 {
-                    text // Cell
+                    text //
+                    ToExpression[#, StandardForm, Defer]& //
+                    ToBoxes //
+                    BoxData //
+                    Cell
                     ,
                     box //
                     ToBoxes //
@@ -79,8 +84,7 @@ listener =
                     ToBoxes //
                     BoxData //
                     ToString;
-                calResult // WolframPlayer[#, request["Body"] // StringDrop[
-                    #, -2]&]&;
+                calResult // WolframPlayer[#, request["Body"]]&;
                 response = ExportString[HTTPResponse[result, <|"StatusCode"
                      -> 200, "ContentType" -> "application/json", "Headers" -> {"Access-Control-Allow-Origin"
                      -> origin}|>], "HTTPResponse"];
