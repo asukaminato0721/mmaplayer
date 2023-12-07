@@ -30,12 +30,12 @@ WolframPlayer[box_, text_String] :=
             ,
             Notebook[
                 {
-                    text //
+                  (* text //
                     ToExpression[#, StandardForm, Defer]& //
                     ToBoxes //
                     BoxData //
                     Cell
-                    ,
+                    ,  *)
                     box //
                     ToBoxes //
                     BoxData //
