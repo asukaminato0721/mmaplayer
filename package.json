@@ -2,9 +2,9 @@
   "name": "mmaplayer",
   "displayName": "mmaplayer",
   "description": "show dynamic content of your code",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
-    "url": "whatever"
+    "url": "https://github.com/asukaminato0721/mmaplayer"
   },
   "activationEvents": [
     "onLanguage:wolfram",
@@ -50,7 +50,8 @@
           ".wl",
           ".nb",
           ".ipynb",
-          ".m"
+          ".m",
+          "vsnb"
         ]
       }
     ]
