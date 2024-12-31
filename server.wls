@@ -65,6 +65,10 @@ ApacheLog[str_String] :=
              <> StringTrim[str]]
     ];
 
+(* 创建一个标记文件来表示服务器正在运行 *)
+flagFile = FileNameJoin[{$TemporaryDirectory, "server-running.flag"}];
+WriteString[flagFile, "1"];
+
 listener =
     SocketListen[
         port
@@ -101,8 +105,14 @@ url = URLBuild[<|"Scheme" -> "http", "Domain" -> First[listener["Socket"
 
 Print["Listening:  ", url, "\n"];
 
-task = ZeroMQLink`Private`$AsyncState["Task"];
-
-WaitAsynchronousTask[task];
+(* 简单循环保持服务器运行 *)
+While[FileExistsQ[flagFile],
+    Pause[1]
+];
 
 Print["Exiting..."];
+
+(* 清理工作 *)
+If[FileExistsQ[flagFile],
+    DeleteFile[flagFile]
+];
