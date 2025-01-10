@@ -29,14 +29,7 @@ WolframPlayer[box_, text_String] :=
                  FileNameJoin
             ,
             Notebook[
-                {
-                  (* text //
-                    ToExpression[#, StandardForm, Defer]& //
-                    ToBoxes //
-                    BoxData //
-                    Cell
-                    ,  *)
-                    box //
+                {box //
                     ToBoxes //
                     BoxData //
                     Cell
@@ -66,7 +59,9 @@ ApacheLog[str_String] :=
     ];
 
 (* 创建一个标记文件来表示服务器正在运行 *)
+
 flagFile = FileNameJoin[{$TemporaryDirectory, "server-running.flag"}];
+
 WriteString[flagFile, "1"];
 
 listener =
@@ -81,8 +76,26 @@ listener =
                 If[Head[origin] === Missing,
                     origin = ""
                 ];
-                calResult = request["Body"] // ToExpression[#, StandardForm
-                    ]&;
+                (* Add syntax check here *)
+                calResult =
+                    If[SyntaxQ[request["Body"]],
+                        request["Body"] // ToExpression[#, StandardForm
+                            ]&
+                        ,
+                        TemplateApply[
+                            "Syntax Error: `` Error at ``"
+                            ,
+                            {
+                                request["Body"]
+                                ,
+                                Module[{
+                                    pos = SyntaxLength[request["Body"]],
+                                    len = StringLength[request["Body"]]},
+                                    StringTake[request["Body"], {Max[1, pos - 2], Min[len, pos + 3]}]
+                                ]
+                            }
+                        ]
+                    ];
                 result =
                     calResult //
                     ToBoxes //
@@ -106,13 +119,13 @@ url = URLBuild[<|"Scheme" -> "http", "Domain" -> First[listener["Socket"
 Print["Listening:  ", url, "\n"];
 
 (* 简单循环保持服务器运行 *)
-While[FileExistsQ[flagFile],
-    Pause[1]
-];
+
+While[FileExistsQ[flagFile], Pause[1]];
 
 Print["Exiting..."];
 
 (* 清理工作 *)
+
 If[FileExistsQ[flagFile],
     DeleteFile[flagFile]
 ];
